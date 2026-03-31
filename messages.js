@@ -256,19 +256,23 @@ const formattedMessage = `
       <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:10px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
       <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
     </div>
-    <div style="margin-top:24px;text-align:center;">
-      <a href="https://portfolio-green-psi-38.vercel.app/" 
-         style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg, #FFBFA0, #F4A07A);color:#2C1A0E;text-decoration:none;border-radius:25px;font-size:14px;font-weight:600;box-shadow:0 4px 15px rgba(244,160,122,0.3);transition:all 0.3s ease;border:2px solid #fff;">
-        Visiter mon portfolio
-      </a>
-    </div>
-    <div style="margin-top:16px;text-align:center;">
-      <span style="font-size:12px;color:#B88C7A;">ou copiez-collez ce lien : </span>
-      <a href="https://portfolio-green-psi-38.vercel.app/" 
-         style="font-size:12px;color:#FFBFA0;text-decoration:underline;font-weight:500;">
-        https://portfolio-green-psi-38.vercel.app/
-      </a>
-    </div>
+    <div style="margin-top: 24px; text-align: center;">
+  <a href="https://portfolio-green-psi-38.vercel.app/"
+     style="display: inline-block; padding: 11px 28px; background-color: #D85A30;
+            color: #ffffff; text-decoration: none; border-radius: 6px;
+            font-size: 14px; font-weight: 600; font-family: Arial, sans-serif;
+            letter-spacing: 0.3px;">
+    Visiter mon portfolio →
+  </a>
+</div>
+<div style="margin-top: 16px; text-align: center;">
+  <span style="font-size: 12px; color: #999999;">ou copiez-collez ce lien : </span>
+  <a href="https://portfolio-green-psi-38.vercel.app/"
+     style="font-size: 12px; color: #D85A30; text-decoration: none; font-weight: 600;
+            border-bottom: 1.5px solid #D85A30; padding-bottom: 1px;">
+    portfolio-green-psi-38.vercel.app
+  </a>
+</div>
 `;
 
   const btn = document.querySelector('.btn-send-primary');
