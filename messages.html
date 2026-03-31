@@ -13,7 +13,6 @@
     <div class="topbar-left">
       <span class="topbar-logo">Manda Arolala</span>
       <div class="topbar-sep"></div>
-      <!-- Onglets de navigation -->
       <div class="tab-nav">
         <button class="tab-btn active" onclick="window.location.href='messages.html'">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -33,7 +32,6 @@
     </div>
   </nav>
 
-  <!-- ── MESSAGES ── -->
   <div class="main">
     <div class="stats-row">
       <div class="stat-card">
@@ -81,6 +79,8 @@
   <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
     <div class="modal" id="modal">
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
+
+      <!-- En-tête expéditeur -->
       <div class="modal-from">
         <div class="modal-avatar" id="modal-avatar">M</div>
         <div>
@@ -88,33 +88,89 @@
           <div class="modal-from-email" id="modal-email-modal"></div>
         </div>
       </div>
+
       <div class="modal-sujet" id="modal-sujet"></div>
       <div class="modal-date" id="modal-date"></div>
-      <hr class="modal-divider" />
-      <div class="modal-message" id="modal-message"></div>
-      
-      <!-- ── Section Réponse ── -->
-      <div class="reply-section" id="reply-section">
-        <hr class="modal-divider" />
-        <div class="reply-header">
-          <h4>Répondre à ce message</h4>
+
+      <!-- ── Thread email ── -->
+      <div class="email-thread">
+
+        <!-- Message original du client -->
+        <div class="thread-message thread-incoming">
+          <div class="thread-msg-header">
+            <div class="thread-msg-from">
+              <div class="thread-avatar incoming" id="thread-avatar-client">M</div>
+              <div>
+                <span class="thread-sender-name" id="thread-sender-name"></span>
+                <span class="thread-sender-tag incoming">Client</span>
+              </div>
+            </div>
+            <div class="thread-msg-date" id="thread-msg-date"></div>
+          </div>
+          <div class="thread-msg-body" id="modal-message"></div>
         </div>
-        <div class="reply-form">
-          <div class="form-group">
-            <label for="reply-subject">Sujet</label>
-            <input type="text" id="reply-subject" placeholder="Réponse à votre message" />
+
+        <!-- Séparateur réponse -->
+        <div class="thread-reply-divider">
+          <div class="thread-reply-line"></div>
+          <div class="thread-reply-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+            Votre réponse
           </div>
-          <div class="form-group">
-            <label for="reply-message">Message</label>
-            <textarea id="reply-message" rows="5" placeholder="Votre réponse..."></textarea>
+          <div class="thread-reply-line"></div>
+        </div>
+
+        <!-- Bloc de réponse (aperçu + formulaire) -->
+        <div class="thread-message thread-outgoing" id="reply-compose-block">
+          <div class="thread-msg-header">
+            <div class="thread-msg-from">
+              <div class="thread-avatar outgoing">MA</div>
+              <div>
+                <span class="thread-sender-name">Manda Arolala</span>
+                <span class="thread-sender-tag outgoing">Vous</span>
+              </div>
+            </div>
+            <div class="thread-compose-hint">Rédigez votre réponse ci-dessous</div>
           </div>
-          <div class="reply-actions">
-            <button class="btn-send" onclick="sendReply()">📧 Envoyer la réponse</button>
-            <button class="btn-cancel" onclick="cancelReply()">Annuler</button>
+
+          <div class="reply-form-inner">
+            <div class="reply-field-row">
+              <label class="reply-field-label">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+                À
+              </label>
+              <div class="reply-to-chip" id="reply-to-chip">—</div>
+            </div>
+            <div class="reply-field-row">
+              <label class="reply-field-label">Sujet</label>
+              <input type="text" id="reply-subject" class="reply-inline-input" placeholder="Réponse à votre message" />
+            </div>
+            <div class="reply-textarea-wrap">
+              <textarea id="reply-message" class="reply-textarea" rows="5" placeholder="Écrivez votre réponse ici…"></textarea>
+            </div>
+
+            <!-- Preview du fil cité -->
+            <div class="reply-quoted-preview" id="reply-quoted-preview">
+              <div class="quoted-toggle" onclick="toggleQuote(this)">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
+                Message original cité
+              </div>
+              <div class="quoted-body" id="quoted-body" style="display:none"></div>
+            </div>
+
+            <div class="reply-actions-row">
+              <button class="btn-send-primary" onclick="sendReply()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Envoyer
+              </button>
+              <button class="btn-discard" onclick="cancelReply()">Effacer</button>
+            </div>
           </div>
         </div>
+
       </div>
-      
+      <!-- fin thread -->
+
       <div class="modal-actions">
         <button class="btn-mark" id="btn-mark" onclick="toggleLu()">✓ Marquer comme lu</button>
         <button class="btn-delete" onclick="deleteMessage()">✕ Supprimer</button>
