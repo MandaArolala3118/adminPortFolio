@@ -168,7 +168,7 @@ async function toggleLu() {
 
 async function markLu(id, lu) {
   try {
-    await apiFetch(`messages/${id}`, {
+    await apiFetch(`messages?id=${id}`, {
       method: 'PATCH',
       body:   JSON.stringify({ lu })
     });
@@ -183,7 +183,7 @@ async function deleteMessage() {
   if (!currentMsgId) return;
   if (!confirm('Supprimer ce message définitivement ?')) return;
   try {
-    await apiFetch(`messages/${currentMsgId}`, { method: 'DELETE' });
+    await apiFetch(`messages?id=${currentMsgId}`, { method: 'DELETE' });
     allMessages = allMessages.filter(m => m.id !== currentMsgId);
     closeModalDirect();
     updateMessageStats();
