@@ -235,31 +235,42 @@ async function sendReply() {
     return;
   }
 
-  const formattedMessage = `<!DOCTYPE html>
-<html lang="fr" style="background:#ffffff;">
+const formattedMessage = `<!DOCTYPE html>
+<html lang="fr">
 <head><meta charset="UTF-8"/></head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:Helvetica,Arial,sans-serif;color:#2C1A0E;font-size:14px;line-height:1.8;">
-<div style="max-width:600px;padding:32px 24px;background:#ffffff;">
 
-  <div style="white-space:pre-wrap;margin-bottom:16px;">${escHtmlEmail(replyMessage)}</div>
+  <div style="max-width:600px;margin:0 auto;padding:32px 24px;">
 
-  <div style="margin-bottom:32px;">
-    Cordialement,<br/>
-    ANDRIANINA Manda Arolala
-  </div>
+    <!-- Sujet -->
+    <p style="margin:0 0 20px 0;font-size:16px;font-weight:600;color:#2C1A0E;">${escHtmlEmail(subject)}</p>
 
-  <div style="background:#f9f5f2;border-radius:8px;padding:24px;">
-    <div style="font-size:11px;color:#B88C7A;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Message original</div>
-    <div style="font-size:12px;color:#B88C7A;line-height:1.6;">De : ${escHtmlEmail(m.nom)} &lt;${escHtmlEmail(m.email)}&gt;</div>
-    <div style="font-size:12px;color:#B88C7A;line-height:1.6;">Date : ${fmtDateLong(m.created_at)}</div>
-    <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:10px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
-    <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
-    <div style="margin-top:20px;">
-      <a href="https://portfolio-green-psi-38.vercel.app/" style="display:inline-block;padding:9px 18px;background:#FFBFA0;color:#2C1A0E;text-decoration:none;border-radius:6px;font-size:13px;font-weight:600;">Voir mon portfolio</a>
+    <!-- Corps du message -->
+    <div style="white-space:pre-wrap;margin-bottom:20px;font-size:14px;line-height:1.8;">${escHtmlEmail(replyMessage)}</div>
+
+    <!-- Signature -->
+    <div style="margin-bottom:40px;font-size:14px;">
+      Cordialement,<br/>
+      ANDRIANINA Manda Arolala
     </div>
+
+    <!-- Séparateur visuel -->
+    <hr style="border:none;border-top:1px solid #e0d4cc;margin-bottom:24px;" />
+
+    <!-- Cadre message original -->
+    <div style="background:#f9f5f2;border-radius:8px;padding:24px;">
+      <div style="font-size:11px;color:#B88C7A;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Message original</div>
+      <div style="font-size:12px;color:#B88C7A;line-height:1.6;">De : ${escHtmlEmail(m.nom)} &lt;${escHtmlEmail(m.email)}&gt;</div>
+      <div style="font-size:12px;color:#B88C7A;line-height:1.6;">Date : ${fmtDateLong(m.created_at)}</div>
+      <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:10px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
+      <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
+      <div style="margin-top:20px;">
+        <a href="https://portfolio-green-psi-38.vercel.app/" style="display:inline-block;padding:9px 18px;background:#FFBFA0;color:#2C1A0E;text-decoration:none;border-radius:6px;font-size:13px;font-weight:600;">Voir mon portfolio</a>
+      </div>
+    </div>
+
   </div>
 
-</div>
 </body>
 </html>`;
 
