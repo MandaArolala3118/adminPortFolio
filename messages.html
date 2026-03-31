@@ -92,6 +92,29 @@
       <div class="modal-date" id="modal-date"></div>
       <hr class="modal-divider" />
       <div class="modal-message" id="modal-message"></div>
+      
+      <!-- ── Section Réponse ── -->
+      <div class="reply-section" id="reply-section">
+        <hr class="modal-divider" />
+        <div class="reply-header">
+          <h4>Répondre à ce message</h4>
+        </div>
+        <div class="reply-form">
+          <div class="form-group">
+            <label for="reply-subject">Sujet</label>
+            <input type="text" id="reply-subject" placeholder="Réponse à votre message" />
+          </div>
+          <div class="form-group">
+            <label for="reply-message">Message</label>
+            <textarea id="reply-message" rows="5" placeholder="Votre réponse..."></textarea>
+          </div>
+          <div class="reply-actions">
+            <button class="btn-send" onclick="sendReply()">📧 Envoyer la réponse</button>
+            <button class="btn-cancel" onclick="cancelReply()">Annuler</button>
+          </div>
+        </div>
+      </div>
+      
       <div class="modal-actions">
         <button class="btn-mark" id="btn-mark" onclick="toggleLu()">✓ Marquer comme lu</button>
         <button class="btn-delete" onclick="deleteMessage()">✕ Supprimer</button>

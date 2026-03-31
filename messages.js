@@ -145,6 +145,11 @@ function openModal(id) {
   document.getElementById('modal-date').textContent        = fmtDateLong(m.created_at);
   document.getElementById('modal-message').textContent     = m.message;
   document.getElementById('btn-mark').textContent          = m.lu ? '↩ Marquer non lu' : '✓ Marquer comme lu';
+  
+  // Pré-remplir le formulaire de réponse
+  document.getElementById('reply-subject').value = `Re: ${m.sujet || 'Votre message'}`;
+  document.getElementById('reply-message').value = '';
+  
   document.getElementById('modal-overlay').classList.add('open');
 
   if (!m.lu) markLu(id, true);
@@ -205,4 +210,53 @@ function fmtDateLong(iso) {
   const d = new Date(iso);
   return d.toLocaleDateString('fr-FR', { weekday:'short', day:'2-digit', month:'long', year:'numeric' }) +
     ' à ' + d.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+}
+
+// ── Fonctions de réponse ──
+async function sendReply() {
+  if (!currentMsgId) return;
+  
+  const m = allMessages.find(x => x.id === currentMsgId);
+  if (!m) return;
+  
+  const subject = document.getElementById('reply-subject').value.trim();
+  const message = document.getElementById('reply-message').value.trim();
+  
+  if (!subject || !message) {
+    alert('Veuillez remplir le sujet et le message.');
+    return;
+  }
+  
+  try {
+    const response = await fetch('/api/admin/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken')
+      },
+      body: JSON.stringify({
+        email: m.email,
+        subject: subject,
+        message: message
+      })
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erreur lors de l\'envoi');
+    }
+    
+    alert('Réponse envoyée avec succès !');
+    cancelReply();
+    closeModalDirect();
+    
+  } catch (error) {
+    console.error('Erreur sendReply:', error);
+    alert('Erreur lors de l\'envoi : ' + error.message);
+  }
+}
+
+function cancelReply() {
+  document.getElementById('reply-subject').value = '';
+  document.getElementById('reply-message').value = '';
 }
