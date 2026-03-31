@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu — Manda Arolala</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">Manda Arolala</span>
+      <div class="topbar-sep"></div>
+      <!-- Onglets de navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn" onclick="window.location.href='messages.html'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Messages
+          <span class="tab-badge" id="menu-unread-badge" style="display:none">0</span>
+        </button>
+        <button class="tab-btn" onclick="window.location.href='visites.html'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Visites
+          <span class="tab-badge" id="menu-today-badge" style="display:none">0</span>
+        </button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="admin-badge" id="admin-name-badge">admin</span>
+      <button class="btn-logout" onclick="handleLogout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="main" style="text-align: center; padding: 4rem 2rem;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text);">Tableau de bord</h1>
+    <p style="color: var(--muted); margin-bottom: 3rem;">Choisissez une section ci-dessus pour commencer</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 800px; margin: 0 auto;">
+      <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='messages.html'">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
+        <div class="stat-label">Messages</div>
+        <div class="stat-value" id="menu-messages-count">—</div>
+      </div>
+      <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='visites.html'">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">👁️</div>
+        <div class="stat-label">Visites</div>
+        <div class="stat-value" id="menu-visits-count">—</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    // Charger les statistiques pour le menu
+    document.addEventListener('DOMContentLoaded', async () => {
+      checkAuthStatus();
+      
+      const savedAdmin = sessionStorage.getItem('adminUser');
+      if (savedAdmin) {
+        try {
+          const adminData = JSON.parse(savedAdmin);
+          document.getElementById('admin-name-badge').textContent = adminData.username;
+        } catch (e) {
+          console.error('Erreur session:', e);
+        }
+      }
+      
+      // Charger les stats
+      await loadMenuStats();
+      
+      // Démarrer la surveillance en temps réel
+      startRealTimeUpdates();
+    });
+    
+    let lastMessageCount = 0;
+    let lastTodayVisits = 0;
+    let updateInterval;
+    
+    function startRealTimeUpdates() {
+      // Mettre à jour toutes les 30 secondes
+      updateInterval = setInterval(async () => {
+        await loadMenuStats();
+      }, 30000);
+    }
+    
+    async function loadMenuStats() {
+      try {
+        // Charger les messages
+        const msgRes = await fetch(`${SUPABASE_URL}/rest/v1/messages?select=id,lu&order=created_at.desc`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          }
+        });
+        const messages = await msgRes.json();
+        const totalMessages = Array.isArray(messages) ? messages.length : 0;
+        const unreadMessages = Array.isArray(messages) ? messages.filter(m => !m.lu).length : 0;
+        
+        document.getElementById('menu-messages-count').textContent = totalMessages;
+        
+        // Afficher le badge des messages non lus avec animation si changement
+        const unreadBadge = document.getElementById('menu-unread-badge');
+        if (unreadMessages > 0) {
+          const oldValue = parseInt(unreadBadge.textContent) || 0;
+          unreadBadge.textContent = unreadMessages;
+          unreadBadge.style.display = 'inline-block';
+          
+          // Animation si augmentation
+          if (unreadMessages > oldValue && oldValue > 0) {
+            unreadBadge.style.animation = 'pulse 0.6s ease-in-out';
+            setTimeout(() => {
+              unreadBadge.style.animation = '';
+            }, 600);
+          }
+        } else {
+          unreadBadge.style.display = 'none';
+        }
+        
+        // Charger les visites
+        const visitsRes = await fetch(`${SUPABASE_URL}/rest/v1/visits?select=visited_at&order=visited_at.desc&limit=1000`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          }
+        });
+        const visits = await visitsRes.json();
+        const totalVisits = Array.isArray(visits) ? visits.length : 0;
+        
+        // Calculer les visites d'aujourd'hui
+        const today = new Date().toDateString();
+        const todayVisits = Array.isArray(visits) ? visits.filter(v => new Date(v.visited_at).toDateString() === today).length : 0;
+        
+        document.getElementById('menu-visits-count').textContent = totalVisits;
+        
+        // Afficher le badge des visites d'aujourd'hui avec animation si changement
+        const todayBadge = document.getElementById('menu-today-badge');
+        if (todayVisits > 0) {
+          const oldValue = parseInt(todayBadge.textContent) || 0;
+          todayBadge.textContent = todayVisits;
+          todayBadge.style.display = 'inline-block';
+          
+          // Animation si augmentation
+          if (todayVisits > oldValue && oldValue > 0) {
+            todayBadge.style.animation = 'pulse 0.6s ease-in-out';
+            setTimeout(() => {
+              todayBadge.style.animation = '';
+            }, 600);
+          }
+        } else {
+          todayBadge.style.display = 'none';
+        }
+      } catch (e) {
+        console.error('Erreur chargement stats:', e);
+      }
+    }
+    
+    // Nettoyer l'intervalle quand l'utilisateur quitte la page
+    window.addEventListener('beforeunload', () => {
+      if (updateInterval) {
+        clearInterval(updateInterval);
+      }
+    });
+  </script>
+  <style>
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); background-color: #E07A52; }
+      100% { transform: scale(1); }
+    }
+  </style>
+</body>
+</html>

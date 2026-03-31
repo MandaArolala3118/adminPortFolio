@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Manda Arolala</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Forcer l'affichage du dashboard dans content.html */
+    #dashboard { display: block !important; }
+    #login-screen { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN (caché) ── -->
+<div id="login-screen" style="display: none;">
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <nav class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">Manda Arolala</span>
+      <div class="topbar-sep"></div>
+      <!-- Onglets de navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" id="tab-messages-btn" onclick="switchTab('messages')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Messages
+        </button>
+        <button class="tab-btn" id="tab-visits-btn" onclick="switchTab('visits')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Visites
+          <span class="tab-badge" id="tab-visits-badge" style="display:none"></span>
+        </button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="admin-badge" id="admin-name-badge">admin</span>
+      <button class="btn-logout" onclick="handleLogout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <!-- ── TAB: MESSAGES ── -->
+  <div class="main" id="tab-messages">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total messages</div>
+        <div class="stat-value" id="stat-total">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Non lus</div>
+        <div class="stat-value" id="stat-unread">— <span>nouveau</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ce mois</div>
+        <div class="stat-value" id="stat-month">—</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="filter-btn active" onclick="setFilter('all', this)">Tous</button>
+        <button class="filter-btn" onclick="setFilter('unread', this)">Non lus</button>
+        <button class="filter-btn" onclick="setFilter('read', this)">Lus</button>
+      </div>
+      <div style="display:flex;gap:0.6rem;align-items:center;">
+        <input class="search-input" type="text" placeholder="Rechercher…" id="search-input" oninput="renderMessages()" />
+        <button class="btn-refresh" onclick="loadMessages()">↺ Actualiser</button>
+      </div>
+    </div>
+
+    <div class="messages-wrap">
+      <div class="messages-header">
+        <div></div>
+        <div>Nom</div>
+        <div class="h-email">Email</div>
+        <div class="h-sujet">Sujet</div>
+        <div>Date</div>
+        <div>Statut</div>
+      </div>
+      <div id="messages-list">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: VISITES ── -->
+  <div class="main" id="tab-visits" style="display:none;">
+
+    <!-- Stats visites -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total visites</div>
+        <div class="stat-value" id="v-stat-total">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Aujourd'hui</div>
+        <div class="stat-value" id="v-stat-today">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Cette semaine</div>
+        <div class="stat-value" id="v-stat-week">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ce mois</div>
+        <div class="stat-value" id="v-stat-month">—</div>
+      </div>
+    </div>
+
+    <!-- Graphe tendance -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Tendance des visites</div>
+          <div class="chart-subtitle">Nombre de visites par jour</div>
+        </div>
+        <div class="chart-range">
+          <button class="range-btn active" onclick="setRange(7, this)">7j</button>
+          <button class="range-btn" onclick="setRange(30, this)">30j</button>
+          <button class="range-btn" onclick="setRange(90, this)">90j</button>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="visits-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Toolbar visites -->
+    <div class="toolbar" style="margin-top:2rem;">
+      <div class="toolbar-left">
+        <span style="font-size:0.8rem;color:var(--muted);padding:0.45rem 0;">Liste des visites</span>
+      </div>
+      <div style="display:flex;gap:0.6rem;align-items:center;">
+        <input class="search-input" type="text" placeholder="Filtrer par referrer…" id="visits-search" oninput="renderVisits()" />
+        <button class="btn-refresh" onclick="loadVisits()">↺ Actualiser</button>
+      </div>
+    </div>
+
+    <!-- Liste visites -->
+    <div class="messages-wrap">
+      <div class="messages-header visits-header">
+        <div>Date</div>
+        <div>Page</div>
+        <div class="h-email">Referrer</div>
+        <div class="h-sujet">Navigateur</div>
+      </div>
+      <div id="visits-list">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal message ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-from">
+      <div class="modal-avatar" id="modal-avatar">M</div>
+      <div>
+        <div class="modal-from-name" id="modal-name"></div>
+        <div class="modal-from-email" id="modal-email-modal"></div>
+      </div>
+    </div>
+    <div class="modal-sujet" id="modal-sujet"></div>
+    <div class="modal-date" id="modal-date"></div>
+    <hr class="modal-divider" />
+    <div class="modal-message" id="modal-message"></div>
+    <div class="modal-actions">
+      <button class="btn-mark" id="btn-mark" onclick="toggleLu()">✓ Marquer comme lu</button>
+      <button class="btn-delete" onclick="deleteMessage()">✕ Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
