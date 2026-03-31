@@ -235,27 +235,29 @@ async function sendReply() {
     return;
   }
 
-  const formattedMessage = `${replyMessage}
+  const formattedMessage = `<!DOCTYPE html>
+<html lang="fr" style="background:#ffffff;">
+<head><meta charset="UTF-8"/></head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:Helvetica,Arial,sans-serif;color:#2C1A0E;font-size:14px;line-height:1.8;">
+<div style="max-width:600px;padding:32px 24px;background:#ffffff;">
 
-Cordialement,
-ANDRIANINA Manda Arolala
-https://portfolio-green-psi-38.vercel.app/
+  <div style="white-space:pre-wrap;margin-bottom:24px;">${escHtmlEmail(replyMessage)}</div>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8"/>
-</head>
-<body style="margin:0;padding:0;font-family:Helvetica,Arial,sans-serif;color:#2C1A0E;font-size:14px;line-height:1.8;">
-  <div style="max-width:600px;padding:24px;">
-    <div style="padding-top:20px;border-top:1px solid #e8e0da;">
-      <div style="font-size:11px;color:#B88C7A;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Message original</div>
-      <div style="font-size:12px;color:#B88C7A;line-height:1.6;">De : ${escHtmlEmail(m.nom)} &lt;${escHtmlEmail(m.email)}&gt;</div>
-      <div style="font-size:12px;color:#B88C7A;line-height:1.6;">Date : ${fmtDateLong(m.created_at)}</div>
-      <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:10px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
-      <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
-    </div>
+  <div>
+    Cordialement,<br/>
+    ANDRIANINA Manda Arolala<br/>
+    <a href="https://portfolio-green-psi-38.vercel.app/" style="color:#2C1A0E;">https://portfolio-green-psi-38.vercel.app/</a>
   </div>
+
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid #e8e0da;">
+    <div style="font-size:11px;color:#B88C7A;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Message original</div>
+    <div style="font-size:12px;color:#B88C7A;line-height:1.6;">De : ${escHtmlEmail(m.nom)} &lt;${escHtmlEmail(m.email)}&gt;</div>
+    <div style="font-size:12px;color:#B88C7A;line-height:1.6;">Date : ${fmtDateLong(m.created_at)}</div>
+    <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:10px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
+    <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
+  </div>
+
+</div>
 </body>
 </html>`;
 
