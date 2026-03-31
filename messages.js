@@ -235,135 +235,49 @@ async function sendReply() {
     return;
   }
 
-  // Email HTML structuré — thread complet
+  // Email HTML simple et lisible
   const formattedMessage = `
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>${subject}</title>
 </head>
-<body style="margin:0;padding:0;background:#f5f0eb;font-family:'DM Sans',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0eb;padding:32px 0;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+<body style="margin:0;padding:0;background:#ffffff;font-family:Helvetica,Arial,sans-serif;color:#2C1A0E;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;padding:40px 24px;">
+    <tr>
+      <td>
 
-        <!-- Header marque -->
-        <tr>
-          <td style="padding:0 0 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="font-family:'Georgia',serif;font-size:22px;font-weight:400;color:#E07A52;letter-spacing:0.02em;">
-                  Manda Arolala
-                </td>
-                <td align="right" style="font-size:11px;color:#B88C7A;letter-spacing:0.08em;text-transform:uppercase;">
-                  Portfolio
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
+        <!-- Message de réponse -->
+        <div style="font-size:15px;line-height:1.8;color:#2C1A0E;white-space:pre-wrap;">${escHtmlEmail(replyMessage)}</div>
 
-        <!-- Carte réponse principale -->
-        <tr>
-          <td style="background:#FFFDFB;border-radius:16px;border:1px solid #FFD9C4;overflow:hidden;">
+        <!-- Signature -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px;padding-top:20px;border-top:1px solid #e8e0da;">
+          <tr>
+            <td>
+              <div style="font-size:14px;font-weight:500;color:#2C1A0E;">ANDRIANINA Manda Arolala</div>
+              <div style="margin-top:6px;">
+                <a href="https://mandaarolala.com" style="font-size:13px;color:#E07A52;text-decoration:none;">Portfolio — ANDRIANINA Manda Arolala</a>
+              </div>
+            </td>
+          </tr>
+        </table>
 
-            <!-- Bande top colorée -->
-            <tr>
-              <td style="background:linear-gradient(135deg,#F4A07A,#E07A52);height:4px;"></td>
-            </tr>
+        <!-- Message original cité -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:36px;">
+          <tr>
+            <td style="border-top:1px solid #e8e0da;padding-top:24px;">
+              <div style="font-size:11px;color:#B88C7A;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;">Message original</div>
+              <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:4px;">De : ${escHtmlEmail(m.nom)} &lt;${escHtmlEmail(m.email)}&gt;</div>
+              <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:4px;">Date : ${fmtDateLong(m.created_at)}</div>
+              <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:12px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
+              <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
+            </td>
+          </tr>
+        </table>
 
-            <!-- Corps réponse -->
-            <tr>
-              <td style="padding:32px 36px 28px;">
-
-                <!-- Expéditeur -->
-                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-                  <tr>
-                    <td style="width:44px;vertical-align:top;">
-                      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#F4A07A,#E07A52);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:16px;color:#fff;text-align:center;line-height:42px;font-weight:400;">MA</div>
-                    </td>
-                    <td style="padding-left:14px;vertical-align:top;">
-                      <div style="font-weight:500;font-size:15px;color:#2C1A0E;">Manda Arolala</div>
-                      <div style="font-size:12px;color:#B88C7A;margin-top:2px;">contact@mandaarolala.com</div>
-                    </td>
-                    <td align="right" style="vertical-align:top;">
-                      <span style="font-size:10px;background:#FFF0E8;color:#E07A52;border:1px solid #FFBFA0;border-radius:20px;padding:3px 10px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;">Réponse</span>
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- Sujet -->
-                <div style="font-family:Georgia,serif;font-size:20px;font-weight:400;color:#2C1A0E;margin-bottom:20px;line-height:1.3;">${subject}</div>
-
-                <!-- Message de réponse -->
-                <div style="font-size:14px;line-height:1.8;color:#2C1A0E;white-space:pre-wrap;">${escHtmlEmail(replyMessage)}</div>
-
-                <!-- Signature -->
-                <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;padding-top:24px;border-top:1px solid #FFD9C4;">
-                  <tr>
-                    <td>
-                      <div style="font-family:Georgia,serif;font-size:15px;color:#E07A52;font-weight:400;">Manda Arolala</div>
-                      <div style="font-size:11px;color:#B88C7A;margin-top:3px;text-transform:uppercase;letter-spacing:0.08em;">Développeuse & Designer</div>
-                    </td>
-                  </tr>
-                </table>
-
-              </td>
-            </tr>
-
-          </td>
-        </tr>
-
-        <!-- Séparateur fil -->
-        <tr>
-          <td style="padding:24px 0 0;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="border-top:1px solid #FFD9C4;"></td>
-                <td style="padding:0 12px;white-space:nowrap;font-size:10px;color:#B88C7A;text-transform:uppercase;letter-spacing:0.08em;">Message original</td>
-                <td style="border-top:1px solid #FFD9C4;"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <!-- Carte message original -->
-        <tr>
-          <td style="background:#FFF7F2;border-radius:12px;border:1px solid #FFD9C4;padding:24px 28px;margin-top:0;">
-
-            <!-- Expéditeur client -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
-              <tr>
-                <td style="width:36px;vertical-align:top;">
-                  <div style="width:34px;height:34px;border-radius:50%;background:#FFBFA0;font-family:Georgia,serif;font-size:14px;color:#E07A52;text-align:center;line-height:34px;">${(m.nom || '?')[0].toUpperCase()}</div>
-                </td>
-                <td style="padding-left:12px;vertical-align:top;">
-                  <div style="font-weight:500;font-size:13px;color:#2C1A0E;">${escHtmlEmail(m.nom)}</div>
-                  <div style="font-size:11px;color:#B88C7A;">${escHtmlEmail(m.email)}</div>
-                </td>
-                <td align="right" style="vertical-align:top;">
-                  <div style="font-size:11px;color:#B88C7A;">${fmtDateLong(m.created_at)}</div>
-                </td>
-              </tr>
-            </table>
-
-            <div style="font-size:12px;color:#7A5543;font-weight:500;margin-bottom:8px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
-            <div style="font-size:13px;line-height:1.75;color:#7A5543;white-space:pre-wrap;">${escHtmlEmail(m.message)}</div>
-
-          </td>
-        </tr>
-
-        <!-- Footer -->
-        <tr>
-          <td style="padding:20px 0;text-align:center;">
-            <div style="font-size:10px;color:#B88C7A;text-transform:uppercase;letter-spacing:0.08em;">mandaarolala.com</div>
-          </td>
-        </tr>
-
-      </table>
-    </td></tr>
+      </td>
+    </tr>
   </table>
 </body>
 </html>
