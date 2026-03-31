@@ -146,8 +146,8 @@ function openModal(id) {
   document.getElementById('modal-message').textContent     = m.message;
   document.getElementById('btn-mark').textContent          = m.lu ? '↩ Marquer non lu' : '✓ Marquer comme lu';
   
-  // Pré-remplir le formulaire de réponse
-  document.getElementById('reply-subject').value = `Re: ${m.sujet || 'Votre message'}`;
+  // Pré-remplir le formulaire de réponse avec "Réponse au [objet original]"
+  document.getElementById('reply-subject').value = `Réponse au ${m.sujet || 'votre message'}`;
   document.getElementById('reply-message').value = '';
   
   document.getElementById('modal-overlay').classList.add('open');
@@ -220,12 +220,23 @@ async function sendReply() {
   if (!m) return;
   
   const subject = document.getElementById('reply-subject').value.trim();
-  const message = document.getElementById('reply-message').value.trim();
+  const replyMessage = document.getElementById('reply-message').value.trim();
   
-  if (!subject || !message) {
+  if (!subject || !replyMessage) {
     alert('Veuillez remplir le sujet et le message.');
     return;
   }
+  
+  // Formater le message avec l'original et la réponse
+  const formattedMessage = `
+<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
+  <strong>Message envoyé:</strong><br>
+  ${m.message}
+</div>
+
+<strong>Réponse:</strong><br>
+${replyMessage}
+  `.trim();
   
   try {
     const response = await fetch('https://backportfolio-six.vercel.app/api/admin/send-email', {
@@ -237,7 +248,7 @@ async function sendReply() {
       body: JSON.stringify({
         email: m.email,
         subject: subject,
-        message: message
+        message: formattedMessage
       })
     });
     
