@@ -234,9 +234,13 @@ async function sendReply() {
     alert('Veuillez remplir le sujet et le message.');
     return;
   }
-
   // Email : réponse + signature en texte brut, message original stylé
   const formattedMessage = `
+  
+  ${replyMessage}
+  
+  Cordialement,
+  ANDRIANINA Manda Arolala
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -245,14 +249,6 @@ async function sendReply() {
 </head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:Helvetica,Arial,sans-serif;color:#2C1A0E;font-size:15px;line-height:1.8;">
   <div style="max-width:600px;margin:0 auto;padding:40px 24px;">
-
-    ${escHtmlEmail(replyMessage).replace(/\n/g, '<br/>')}
-
-    <br/><br/>
-    --<br/>
-    ANDRIANINA Manda Arolala<br/>
-    <a href="https://mandaarolala.com" style="color:#2C1A0E;text-decoration:none;">Portfolio — ANDRIANINA Manda Arolala</a>
-
     <!-- Message original cité -->
     <div style="margin-top:36px;padding-top:24px;border-top:1px solid #e8e0da;">
       <div style="font-size:11px;color:#B88C7A;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;">Message original</div>
@@ -261,8 +257,8 @@ async function sendReply() {
       <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:12px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
       <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
     </div>
-
   </div>
+  <a href="https://portfolio-green-psi-38.vercel.app/" style="display:inline-block;margin-top:24px;padding:10px 16px;background:#FFBFA0;color:#2C1A0E;text-decoration:none;border-radius:6px;font-weight:600;">Voir mon portfolio</a>
 </body>
 </html>
   `.trim();
