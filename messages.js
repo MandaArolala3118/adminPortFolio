@@ -228,7 +228,7 @@ async function sendReply() {
   }
   
   try {
-    const response = await fetch('/api/admin/send-email', {
+    const response = await fetch('https://backportfolio-six.vercel.app/api/admin/send-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
