@@ -255,9 +255,9 @@ const formattedMessage = `
       <div style="font-size:12px;color:#B88C7A;line-height:1.6;">Date : ${fmtDateLong(m.created_at)}</div>
       <div style="font-size:12px;color:#B88C7A;line-height:1.6;margin-bottom:10px;">Sujet : ${escHtmlEmail(m.sujet || '(sans sujet)')}</div>
       <div style="font-size:13px;color:#7A5543;line-height:1.75;white-space:pre-wrap;border-left:3px solid #FFBFA0;padding-left:14px;">${escHtmlEmail(m.message)}</div>
-      <div style="margin-top:20px;">
-        <a href="https://portfolio-green-psi-38.vercel.app/" style="display:inline-block;padding:9px 18px;background:#FFBFA0;color:#2C1A0E;text-decoration:none;border-radius:6px;font-size:13px;font-weight:600;">Voir mon portfolio</a>
-      </div>
+    </div>
+    <div style="margin-top:20px;">
+      <a href="https://portfolio-green-psi-38.vercel.app/" style="display:inline-block;padding:9px 18px;background:#FFBFA0;color:#2C1A0E;text-decoration:none;border-radius:6px;font-size:13px;font-weight:600;">Voir mon portfolio</a>
     </div>
 `;
 
