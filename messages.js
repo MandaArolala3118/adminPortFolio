@@ -235,13 +235,7 @@ async function sendReply() {
     return;
   }
 
-const formattedMessage = `<!DOCTYPE html>
-<html lang="fr">
-<head><meta charset="UTF-8"/></head>
-<body style="margin:0;padding:0;background:#ffffff;font-family:Helvetica,Arial,sans-serif;color:#2C1A0E;font-size:14px;line-height:1.8;">
-
-  <div style="max-width:600px;margin:0 auto;padding:32px 24px;">
-
+const formattedMessage = `
     <!-- Corps du message -->
     <div style="white-space:pre-wrap;margin-bottom:20px;font-size:14px;line-height:1.8;">${escHtmlEmail(replyMessage)}</div>
 
@@ -265,11 +259,7 @@ const formattedMessage = `<!DOCTYPE html>
         <a href="https://portfolio-green-psi-38.vercel.app/" style="display:inline-block;padding:9px 18px;background:#FFBFA0;color:#2C1A0E;text-decoration:none;border-radius:6px;font-size:13px;font-weight:600;">Voir mon portfolio</a>
       </div>
     </div>
-
-  </div>
-
-</body>
-</html>`;
+`;
 
   const btn = document.querySelector('.btn-send-primary');
   btn.disabled   = true;
