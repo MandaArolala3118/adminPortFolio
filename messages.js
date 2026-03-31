@@ -242,9 +242,6 @@ const formattedMessage = `<!DOCTYPE html>
 
   <div style="max-width:600px;margin:0 auto;padding:32px 24px;">
 
-    <!-- Sujet -->
-    <p style="margin:0 0 20px 0;font-size:16px;font-weight:600;color:#2C1A0E;">${escHtmlEmail(subject)}</p>
-
     <!-- Corps du message -->
     <div style="white-space:pre-wrap;margin-bottom:20px;font-size:14px;line-height:1.8;">${escHtmlEmail(replyMessage)}</div>
 
