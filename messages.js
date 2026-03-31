@@ -185,6 +185,14 @@ function closeModal(e) {
 function closeModalDirect() {
   document.getElementById('modal-overlay').classList.remove('open');
   currentMsgId = null;
+  
+  // Réinitialiser le bouton d'envoi lors de la fermeture du modal
+  const btn = document.querySelector('.btn-send-primary');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer';
+    btn.style.background = '';
+  }
 }
 
 async function toggleLu() {
@@ -320,6 +328,14 @@ function cancelReply() {
   const body = document.getElementById('quoted-body');
   body.style.display = 'none';
   document.querySelector('.quoted-toggle')?.classList.remove('active');
+  
+  // Réinitialiser le bouton d'envoi
+  const btn = document.querySelector('.btn-send-primary');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer';
+    btn.style.background = '';
+  }
 }
 
 // ── Utilitaires ──
